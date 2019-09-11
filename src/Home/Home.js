@@ -26,4 +26,4 @@ function bindActions(dispatch) {
 const mapStateToProps = (state) => ({
         users: state.users
 })
-export default connect(bindActions, mapStateToProps)(Home)
+export default connect(mapStateToProps,bindActions)(Home)
