@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import Home from './Home/Home'
 import Users from './Users/Users'
 import Albums from './Albums/Albums'
+// import Data from './Data/Data'
 
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
@@ -12,8 +13,10 @@ import Albums from './Albums/Albums'
 const Routes = () => (
     <Switch>
       <Route exact path='/' component={Home}/>
-      <Route path='/users' component={Users}/>
-      <Route path='/albums' component={Albums}/>
+      <Route exact path='/users' component={Users}/>
+      <Route exact path='/albums' component={Albums}/>
+      <Route exact path='/users/:id' component={Users}/>
+      <Route path='/users/:id/albums' component={Albums} />
     </Switch>
 )
 
