@@ -31,3 +31,62 @@
     transform: rotate(360deg);
   }
 }
+
+.height-100per {
+  height:100%
+}
+
+.width-100per {
+  width: 100%;
+}
+
+.bg-center {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-color {
+  background-color: pink;
+} 
+
+.font-color {
+  color : black;
+}
+
+.link {
+  color : black;
+}
+
+.link:hover {
+  color: white;
+}
+
+.form-login {
+  position: absolute;
+    left: 90px;
+    top: 66px;
+}
+
+.font-white {
+  color : white;
+}
+
+.form-home {
+  position: absolute;
+  top: 5rem;
+  left: 20rem;
+}
+
+.home-title {
+  color: springgreen;
+  font-size: 5rem;
+}
+
+.home-body {
+  color: springgreen;
+  text-align: center;
+  position: absolute;
+  left: -5rem;
+  width: 128%;
+}

@@ -1,20 +1,22 @@
 import React, { Component } from 'react'
-import {connect} from 'react-redux'
-// import {addAlbums} from '../actions/index'
+import { connect } from 'react-redux'
+import { addAlbums } from '../actions'
 
 class Albums extends Component {
 
     componentDidMount() {
+        this.props.addAlbums(this.props.match.params.id)
     }
     render() {
         return (
             <div>
-                <ul>
-                    {this.props.albums.map((data,idx) => 
-                    <li key={data.id}>
-                    {data.title}
-                    </li>)}
-                </ul>
+                 {this.props.loading ? '' : <ul>
+                    {this.props.albums.map((data, idx) =>
+                        <li key={data.id}>
+                            {data.title}
+                        </li>)}
+                </ul>}
+                
             </div>
         )
     }
@@ -22,11 +24,13 @@ class Albums extends Component {
 
 const bindActions = (dispatch) => {
     return {
+        addAlbums: (userId) => dispatch(addAlbums(userId))
     }
 }
 
 const mapStateToProps = state => ({
-    albums : state.getusers.albums
+    albums: state.getusers.albums,
+    loading: state.loading.loading
 })
 
-export default connect(mapStateToProps,bindActions)(Albums)
+export default connect(mapStateToProps, bindActions)(Albums)
