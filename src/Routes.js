@@ -5,6 +5,7 @@ import Users from './Users/Users'
 import Albums from './Albums/Albums'
 import Todos from './Todos/Todos'
 import Posts from './Posts/Posts'
+import Map from './Map/Map'
 // import Data from './Data/Data'
 
 // The Main component renders one of the three provided
@@ -21,6 +22,7 @@ const Routes = () => (
       <Route path='/users/:id/albums' component={Albums} />
       <Route path='/users/:id/todos' component={Todos} />
       <Route path='/users/:id/posts' component={Posts} />
+      <Route path='/map' component={Map} />
     </Switch>
 )
 

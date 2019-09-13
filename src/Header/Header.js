@@ -18,6 +18,9 @@ class Header extends Component {
                             <li className="nav-item">
                                 <div className="nav-link"> <Link to ="/users" className="link"> User </Link> </div>
                             </li>
+                            <li className="nav-item">
+                                <div className="nav-link"> <Link to ="/map" className="link"> Map </Link> </div>
+                            </li>
                         </ul>
                     </div>
                 </nav>
@@ -25,6 +28,6 @@ class Header extends Component {
         )
     }
 }
-
+ 
 
 export default Header
