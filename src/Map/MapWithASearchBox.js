@@ -1,7 +1,5 @@
 import React from 'react'
-
 const _ = require("lodash");
-
 const { compose, withProps, lifecycle } = require("recompose");
 const {
   withScriptjs,
@@ -11,9 +9,9 @@ const {
 } = require("react-google-maps");
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 
-const Map = compose(
+const MapWithASearchBox = compose(
   withProps({
-    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmWTxSqXSXyi_jkHAMDmooykTc8qjGGQ&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `400px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
@@ -21,7 +19,6 @@ const Map = compose(
   lifecycle({
     componentWillMount() {
       const refs = {}
-
       this.setState({
         bounds: null,
         center: {
@@ -42,7 +39,7 @@ const Map = compose(
         },
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
-          const bounds = new google.maps.LatLngBounds();
+          const bounds = new window.google.maps.LatLngBounds();
 
           places.forEach(place => {
             if (place.geometry.viewport) {
@@ -73,11 +70,12 @@ const Map = compose(
     defaultZoom={15}
     center={props.center}
     onBoundsChanged={props.onBoundsChanged}
+    marker={props.center}
   >
     <SearchBox
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
-      controlPosition={google.maps.ControlPosition.TOP_LEFT}
+      controlPosition={window.google.maps.ControlPosition.TOP_LEFT}
       onPlacesChanged={props.onPlacesChanged}
     >
       <input
@@ -101,9 +99,20 @@ const Map = compose(
     {props.markers.map((marker, index) =>
       <Marker key={index} position={marker.position} />
     )}
+    <Marker
+      position={{ lat: -34.397, lng: 150.644 }}
+    />
   </GoogleMap>
 );
 
-<MapWithASearchBox />
 
-export default Map
+class MapWithASearchBoxs extends React.Component {
+ 
+  render() {
+    return (
+      <MapWithASearchBox />
+    )
+  }
+}
+
+export default MapWithASearchBoxs;
