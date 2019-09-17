@@ -8,21 +8,22 @@ const {
   Marker,
 } = require("react-google-maps");
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
-
-const MapWithASearchBox = compose(
+const Map = compose(
   withProps({
-    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmWTxSqXSXyi_jkHAMDmooykTc8qjGGQ&v=3.exp&libraries=geometry,drawing,places",
+    googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAThdp0jjkh6Fv6akKKIAesW8vbttDZHW0&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `400px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
+  
+
   lifecycle({
     UNSAFE_componentWillMount() {
       const refs = {}
       this.setState({
         bounds: null,
         center: {
-          lat: 41.9, lng: -87.624
+          lat: 13.736717, lng: 100.523186
         },
         markers: [],
         onMapMounted: ref => {
@@ -37,6 +38,7 @@ const MapWithASearchBox = compose(
         onSearchBoxMounted: ref => {
           refs.searchBox = ref;
         },
+
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
           const bounds = new window.google.maps.LatLngBounds();
@@ -65,12 +67,16 @@ const MapWithASearchBox = compose(
   withScriptjs,
   withGoogleMap
 )(props =>
+
+
   <GoogleMap
     ref={props.onMapMounted}
-    defaultZoom={15}
+    defaultZoom={13}
     center={props.center}
     onBoundsChanged={props.onBoundsChanged}
-    marker={props.center}
+    marker={props.marker}
+    option={{draggable: true}}
+    onClick={props.onClick}
   >
     <SearchBox
       ref={props.onSearchBoxMounted}
@@ -96,21 +102,49 @@ const MapWithASearchBox = compose(
         }}
       />
     </SearchBox>
-    {props.markers.map((marker, index) =>
+    {/* {props.markers.map((marker, index) =>
       <Marker key={index} position={marker.position} />
-    )}
+    )} */}
     <Marker
-      position={{ lat: -34.397, lng: 150.644 }}
+      position={props.marker}
+      onClick= {props.onClick}
     />
   </GoogleMap>
 );
 
 
 class MapWithASearchBoxs extends React.Component {
- 
+  constructor(props) {
+    super(props);
+    this.state = {
+        address: {
+            location: {
+                lat: '13.736717',
+                lng: '100.523186'
+            }
+        }
+    };
+}
+  changeLocation = (event) => {
+    console.log(event)
+    this.setState({
+      address: {
+        location: {
+          lat: 13.736717,
+          lng: 101.523186
+        }
+      }
+    })
+  }
   render() {
+    console.log(this.state)
     return (
-      <MapWithASearchBox />
+      <Map onClick={this.changeLocation}
+      defaultZoom={15}
+      center={this.changeLocation}
+      option={{draggable: true}}
+      marker={this.state.address.location}
+      />
     )
   }
 }
