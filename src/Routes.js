@@ -6,6 +6,7 @@ import Albums from './Albums/Albums'
 import Todos from './Todos/Todos'
 import Posts from './Posts/Posts'
 import MapWithASearchBox from './Map/MapWithASearchBox'
+import Movie from './Movie/movie'
 // import Data from './Data/Data'
 
 // The Main component renders one of the three provided
@@ -23,6 +24,7 @@ const Routes = () => (
       <Route path='/users/:id/todos' component={Todos} />
       <Route path='/users/:id/posts' component={Posts} />
       <Route path='/map' component={MapWithASearchBox} />
+      <Route path='/movie' component={Movie} />
     </Switch>
 )
 

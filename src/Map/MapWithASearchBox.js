@@ -1,4 +1,5 @@
 import React from 'react'
+import { getAddress } from './GetAddress'
 const _ = require("lodash");
 const { compose, withProps, lifecycle } = require("recompose");
 const {
@@ -8,24 +9,36 @@ const {
   Marker,
 } = require("react-google-maps");
 const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
+const { InfoBox } = require("react-google-maps/lib/components/addons/InfoBox");
+
 const Map = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAThdp0jjkh6Fv6akKKIAesW8vbttDZHW0&v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `400px` }} />,
+    containerElement: <div style={{ height: `550px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
   }),
-  
-
   lifecycle({
-    UNSAFE_componentWillMount() {
+
+    componentWillReceiveProps(nextProps) {
+      this.setState({
+        center: {
+          lat: parseFloat(nextProps.center.lat) || '', lng: parseFloat(nextProps.center.lng) || ''
+        },
+        markers: {
+          lat: parseFloat(nextProps.markers.lat), lng: parseFloat(nextProps.markers.lng)
+        }
+      })
+    },
+
+    componentWillMount() {
       const refs = {}
       this.setState({
         bounds: null,
         center: {
           lat: 13.736717, lng: 100.523186
         },
-        markers: [],
+        // markers:[],
         onMapMounted: ref => {
           refs.map = ref;
         },
@@ -38,7 +51,6 @@ const Map = compose(
         onSearchBoxMounted: ref => {
           refs.searchBox = ref;
         },
-
         onPlacesChanged: () => {
           const places = refs.searchBox.getPlaces();
           const bounds = new window.google.maps.LatLngBounds();
@@ -54,10 +66,10 @@ const Map = compose(
             position: place.geometry.location,
           }));
           const nextCenter = _.get(nextMarkers, '0.position', this.state.center);
-
           this.setState({
             center: nextCenter,
-            markers: nextMarkers,
+            markers: nextMarkers ? { lat: nextMarkers[0].position.lat(), lng: nextMarkers[0].position.lng() } : this.props.markers
+            // markers: {lat:nextMarkers[0].position.lat(),lng:nextMarkers[0].position.lng()},
           });
           // refs.map.fitBounds(bounds);
         },
@@ -66,16 +78,15 @@ const Map = compose(
   }),
   withScriptjs,
   withGoogleMap
+
+
 )(props =>
-
-
   <GoogleMap
     ref={props.onMapMounted}
-    defaultZoom={13}
+    defaultZoom={15}
     center={props.center}
     onBoundsChanged={props.onBoundsChanged}
-    marker={props.marker}
-    option={{draggable: true}}
+    markers={props.markers}
     onClick={props.onClick}
   >
     <SearchBox
@@ -102,49 +113,60 @@ const Map = compose(
         }}
       />
     </SearchBox>
-    {/* {props.markers.map((marker, index) =>
-      <Marker key={index} position={marker.position} />
-    )} */}
+    <InfoBox
+      position={new window.google.maps.LatLng(props.center.lat, props.center.lng)}
+      options={{ closeBoxURL: ``, enableEventPropagation: true }}
+    >
+      <div style={{ backgroundColor: `yellow`, opacity: 0.75, padding: `12px` }}>
+        <div style={{ fontSize: `16px`, fontColor: `#08233B` }}>
+          Here's your Home
+        </div>
+      </div>
+    </InfoBox>
     <Marker
-      position={props.marker}
-      onClick= {props.onClick}
+      position={props.markers}
     />
   </GoogleMap>
 );
-
 
 class MapWithASearchBoxs extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        address: {
-            location: {
-                lat: '13.736717',
-                lng: '100.523186'
-            }
+      address: {
+        location: {
+          lat: parseFloat(13.736717),
+          lng: parseFloat(100.523186)
         }
-    };
-}
-  changeLocation = (event) => {
-    console.log(event)
+      }
+    }
+  }
+  changeLocation = async (event) => {
     this.setState({
       address: {
         location: {
-          lat: 13.736717,
-          lng: 101.523186
+          lat: parseFloat(event.latLng.lat()),
+          lng: parseFloat(event.latLng.lng())
         }
       }
     })
+    const address = await getAddress(this.state.address.location.lat + ',' + this.state.address.location.lng)
+    this.setState({
+      formatAddress : address
+    })
   }
+
   render() {
-    console.log(this.state)
     return (
+      <div>
       <Map onClick={this.changeLocation}
-      defaultZoom={15}
-      center={this.changeLocation}
-      option={{draggable: true}}
-      marker={this.state.address.location}
+        defaultZoom={15}
+        center={this.state.address.location}
+        option={{ draggable: true }}
+        markers={this.state.address.location}
       />
+      <h3>{this.state.formatAddress}</h3>
+       </div>
     )
   }
 }
