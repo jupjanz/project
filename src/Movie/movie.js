@@ -8,7 +8,7 @@ class Movie extends Component {
         super(props)
         this.state = {
             apikey: "",
-            movie: [],
+            movie: null,
             session: {},
             keyword: "",
         }
@@ -32,21 +32,35 @@ class Movie extends Component {
             keyword: event.target.value
         })
         const resultGetMovie = await getMovie(this.state.apikey, this.state.keyword)
+        console.log('resultGetMovie',resultGetMovie)
         await this.setState({
             movie : resultGetMovie
         })
-        console.log(this.state.movie)
     }
 
 
 
     render() {
+        console.log(this.state.movie && this.state.movie.result);
+        
         return (
+            <div>
             <div className="input-group mb-3">
                 <input type="text" className="form-control" placeholder="Movie Search" aria-label="Movie Search" aria-describedby="button-addon2" onChange={this.onChangeSeachMovie} />
                 <div className="input-group-append">
                     <button className="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
                 </div>
+            </div>
+              <div>
+                {this.state.movie && this.state.movie.results.map((item) => (
+                    <ul>
+                        <li>
+                            {item.title}
+                        </li>
+                    </ul>
+                )
+                )}
+            </div>
             </div>
         )
     }

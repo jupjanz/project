@@ -18,5 +18,8 @@ export const saveSessionId = (session) => dispatch => {
 
 export const getMovie = async (apikey,keyword) => {
     const result = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${apikey}&language=en-US&query=${keyword}`)
-    console.log(result.data)
+    if(result.data == null) {
+        return null
+    }
+    return result.data
 }
