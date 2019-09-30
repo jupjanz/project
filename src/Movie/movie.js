@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {  saveSessionId, getMovie } from '../actions/movie'
+import { saveSessionId, getMovie } from '../actions/movie'
+import './movie.css'
+
 
 class Movie extends Component {
 
@@ -21,10 +23,6 @@ class Movie extends Component {
         await this.setState({
             apikey: API_KEY
         })
-        //    const resultSession = await getSession(API_KEY)
-        //    await this.setState({
-        //         session : resultSession,
-        //     })
     }
 
     onChangeSeachMovie = async (event) => {
@@ -32,35 +30,35 @@ class Movie extends Component {
             keyword: event.target.value
         })
         const resultGetMovie = await getMovie(this.state.apikey, this.state.keyword)
-        console.log('resultGetMovie',resultGetMovie)
+        console.log(resultGetMovie)
         await this.setState({
-            movie : resultGetMovie
+            movie: resultGetMovie
         })
     }
 
 
 
     render() {
-        console.log(this.state.movie && this.state.movie.result);
-        
+        // console.log(this.state.movie && this.state.movie.result);
+
         return (
             <div>
-            <div className="input-group mb-3">
-                <input type="text" className="form-control" placeholder="Movie Search" aria-label="Movie Search" aria-describedby="button-addon2" onChange={this.onChangeSeachMovie} />
-                <div className="input-group-append">
-                    <button className="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+                <div className="input-group mb-3">
+                    <input type="text" className="form-control" placeholder="Movie Search" aria-label="Movie Search" aria-describedby="button-addon2" onChange={this.onChangeSeachMovie} />
                 </div>
-            </div>
-              <div>
-                {this.state.movie && this.state.movie.results.map((item) => (
-                    <ul>
-                        <li>
-                            {item.title}
-                        </li>
-                    </ul>
-                )
-                )}
-            </div>
+                <div className="padding-80">
+                    {this.state.movie && this.state.movie.results.map((item) => (
+                        <div key={item.id}>
+                            <div className="d-flex justify-content-center" >
+                                <img src={"https://image.tmdb.org/t/p/w300/" + item.poster_path} alt="Movie Poster" />
+                            </div>
+
+                            <h3 className="text-center">{item.title}</h3>
+                            <h4>{item.overview}</h4>
+                        </div>
+                    )
+                    )}
+                </div>
             </div>
         )
     }
